@@ -9,7 +9,8 @@
 import Foundation
 
 struct Queue<T> {
-    private var queue: [T] = []
+    private var queue: [T?] = []
+    private var head: Int = 0
     
     public var count: Int {
         return queue.count
@@ -24,6 +25,22 @@ struct Queue<T> {
     }
     
     public mutating func dequeue() -> T? {
-        return isEmpty ? nil : queue.removeFirst()
+        guard head <= queue.count, let element = queue[head] else { return nil }
+        
+        queue[head] = nil
+        head += 1
+        
+        if head > 50 {
+            queue.removeFirst(head)
+            head = 0
+        }
+        
+        return element
     }
 }
+
+
+var myQueue = Queue<Int>()
+myQueue.enqueue(10)
+myQueue.dequeue()
+
